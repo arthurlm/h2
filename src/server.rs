@@ -1424,6 +1424,15 @@ impl proto::Peer for Peer {
         // header
         if let Some(authority) = pseudo.authority {
             let maybe_authority = uri::Authority::from_maybe_shared(authority.clone().into_inner());
+
+            if let Err(why) = &maybe_authority {
+                tracing::debug!(
+                    "malformed headers: malformed authority ({:?}): {}",
+                    authority,
+                    why,
+                );
+            }
+
             parts.authority = maybe_authority.ok();
         }
 
